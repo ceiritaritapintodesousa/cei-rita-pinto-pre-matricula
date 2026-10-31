@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1e40af">
-  <meta name="description" content="Pré-Matrículas Escolares 2026 - CEI Rita Pinto de Sousa, Varjota, Amontada - CE. Garanta a vaga da Educação Infantil do seu filho de forma rápida e prática!">
+  <meta name="description" content="Pré-Matrículas Escolares 2026 - CEI Rita Pinto de Sousa, Varjota, Amontada - CE. Garanta a vaga da Educação Infantil do seu filho de forma rápida e prática com comprovante em PDF!">
   
   <title>Pré-Matrículas 2026 | CEI Rita Pinto de Sousa</title>
 
@@ -13,6 +13,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- html2pdf.js para geração de PDF elegante no navegador -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -45,11 +48,11 @@
 
       <div class="hero-callout">
         <h2>Pré-Matrícula Online</h2>
-        <p>Preencha os dados abaixo pelo celular para solicitar a vaga do seu filho(a). É rápido, fácil e seguro!</p>
+        <p>Preencha os dados abaixo pelo celular. Ao concluir, um <strong>Comprovante Oficial em PDF</strong> com design moderno será gerado e enviado diretamente para a secretaria pelo WhatsApp!</p>
       </div>
 
       <div class="status-pill">
-        <span class="dot-live"></span> Inscrições Abertas &bull; Vagas Limitadas
+        <span class="dot-live"></span> Inscrições Abertas &bull; Gera PDF Oficial
       </div>
     </header>
 
@@ -295,15 +298,15 @@
         <!-- SEÇÃO DE ENVIO E GARANTIA -->
         <div class="submit-section">
           <div class="security-info">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Seus dados são transmitidos com segurança e enviados diretamente para o WhatsApp oficial da escola: <strong>(88) 99654-5870</strong></span>
+            <i class="fa-solid fa-file-pdf pdf-accent"></i>
+            <span>Ao clicar abaixo, será gerado automaticamente um <strong>PDF Oficial de Pré-Matrícula</strong> e aberto o WhatsApp oficial: <strong>(88) 99654-5870</strong> para anexar o documento.</span>
           </div>
 
           <button type="submit" id="btnSubmit" class="btn-whatsapp-submit">
-            <i class="fa-brands fa-whatsapp icon-large"></i>
+            <i class="fa-solid fa-file-arrow-up icon-large"></i>
             <span class="btn-text">
-              <strong>ENVIAR PRÉ-MATRÍCULA AGORA</strong>
-              <small>Confirmar dados e enviar no WhatsApp da Escola</small>
+              <strong>GERAR PDF & ENVIAR NO WHATSAPP</strong>
+              <small>Cria o documento oficial em PDF e abre o WhatsApp</small>
             </span>
             <i class="fa-solid fa-arrow-right icon-arrow"></i>
           </button>
@@ -337,29 +340,52 @@
 
   </div>
 
-  <!-- MODAL DE SUCESSO / CONFIRMAÇÃO -->
+  <!-- =========================================================================
+       MODAL DE SUCESSO / COMPROVANTE & AÇÃO DE WHATSAPP
+       ========================================================================= -->
   <div id="successModal" class="modal-backdrop hidden">
     <div class="modal-card">
-      <div class="modal-confetti">🎉</div>
+      <div class="modal-confetti">📄✨</div>
       <div class="modal-icon-check">
-        <i class="fa-solid fa-check"></i>
+        <i class="fa-solid fa-file-circle-check"></i>
       </div>
-      <h3>Pré-Matrícula Gerada!</h3>
+      <h3>Comprovante em PDF Gerado!</h3>
       <p class="modal-p">
-        Os dados da pré-matrícula foram organizados com sucesso para a secretaria do <strong>CEI Rita Pinto de Sousa</strong>.
+        O <strong>PDF Oficial de Pré-Matrícula</strong> foi criado com sucesso e baixado no seu aparelho. Agora, basta abrir o WhatsApp para encaminhá-lo à secretaria escolar:
       </p>
+
+      <div class="pdf-preview-pill">
+        <i class="fa-solid fa-file-pdf"></i>
+        <div class="pdf-preview-info">
+          <strong id="pdfFileName">Pre-Matricula-2026.pdf</strong>
+          <span>Documento Oficial &bull; Pronto para envio</span>
+        </div>
+      </div>
 
       <div class="receipt-box" id="receiptSummary">
         <!-- Preenchido via Javascript -->
       </div>
 
+      <div class="modal-instructions-box">
+        <strong><i class="fa-solid fa-circle-info"></i> Como enviar pelo WhatsApp:</strong>
+        <ol>
+          <li>Toque no botão verde <strong>"Abrir WhatsApp da Escola"</strong> abaixo.</li>
+          <li>No WhatsApp, toque no ícone de <strong>Grampo / Anexo</strong> (<i class="fa-solid fa-paperclip"></i>) e escolha <strong>Documento</strong>.</li>
+          <li>Selecione o PDF baixado e envie para a secretaria!</li>
+        </ol>
+      </div>
+
       <div class="modal-buttons">
         <a id="btnModalWhats" href="#" target="_blank" class="btn-primary-action">
-          <i class="fa-brands fa-whatsapp"></i> Abrir WhatsApp e Enviar Mensagem
+          <i class="fa-brands fa-whatsapp"></i> Abrir WhatsApp da Escola (88) 99654-5870
         </a>
 
+        <button type="button" id="btnBaixarPdfNovamente" class="btn-secondary-action">
+          <i class="fa-solid fa-cloud-arrow-down"></i> Baixar PDF Novamente
+        </button>
+
         <button type="button" id="btnCopiarDados" class="btn-secondary-action">
-          <i class="fa-regular fa-copy"></i> Copiar Mensagem da Inscrição
+          <i class="fa-regular fa-copy"></i> Copiar Resumo em Texto
         </button>
 
         <button type="button" id="btnNovaInscricao" class="btn-text-action">
@@ -369,7 +395,9 @@
     </div>
   </div>
 
-  <!-- MODAL DE HISTÓRICO LOCAL (BACKUP DA SECRETARIA) -->
+  <!-- =========================================================================
+       MODAL DE HISTÓRICO LOCAL (BACKUP DA SECRETARIA)
+       ========================================================================= -->
   <div id="historicoModal" class="modal-backdrop hidden">
     <div class="modal-card modal-large">
       <div class="modal-header-row">
@@ -393,6 +421,193 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       TEMPLATE OCULTO DO DOCUMENTO PDF OFICIAL (A4 - DESIGN MODERNO)
+       ========================================================================= -->
+  <div class="pdf-render-wrapper">
+    <div id="pdf-document" class="official-pdf-sheet">
+      
+      <!-- Cabeçalho Oficial do PDF -->
+      <div class="pdf-header">
+        <div class="pdf-header-top">
+          <div class="pdf-crest">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div class="pdf-gov-info">
+            <h4>MUNICÍPIO DE AMONTADA &bull; CEARÁ</h4>
+            <h5>SECRETARIA MUNICIPAL DE EDUCAÇÃO</h5>
+            <h2>CEI RITA PINTO DE SOUSA</h2>
+            <p>Educação Infantil &bull; Localidade: Varjota, Amontada - CE</p>
+          </div>
+          <div class="pdf-tag-2026">
+            <span>ANO LETIVO</span>
+            <strong>2026</strong>
+          </div>
+        </div>
+        <div class="pdf-title-banner">
+          <h3>COMPROVANTE OFICIAL DE SOLICITAÇÃO DE PRÉ-MATRÍCULA</h3>
+        </div>
+      </div>
+
+      <!-- Barra de Protocolo e Status -->
+      <div class="pdf-meta-bar">
+        <div><strong>PROTOCOLO:</strong> <span id="pdf-proto">#MAT2026-000000</span></div>
+        <div><strong>DATA DE EMISSÃO:</strong> <span id="pdf-data-emissao">00/00/0000</span></div>
+        <div><span class="pdf-status-badge">PRÉ-CADASTRO REGISTRADO</span></div>
+      </div>
+
+      <!-- Bloco 1: Turma e Turno -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">
+          <i class="fa-solid fa-book-open"></i> 1. VAGA PRETENDIDA
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">Série / Turma:</span>
+            <span class="val highlight-val" id="pdf-turma">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Turno de Preferência:</span>
+            <span class="val highlight-val" id="pdf-turno">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 2: Dados do Aluno -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">
+          <i class="fa-solid fa-child"></i> 2. IDENTIFICAÇÃO DO ALUNO(A)
+        </div>
+        <div class="pdf-grid-full">
+          <div class="pdf-info-box">
+            <span class="lbl">Nome Completo do Aluno(a):</span>
+            <span class="val bold-val" id="pdf-aluno-nome">-</span>
+          </div>
+        </div>
+        <div class="pdf-grid-3">
+          <div class="pdf-info-box">
+            <span class="lbl">Data de Nasc.:</span>
+            <span class="val" id="pdf-aluno-nasc">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Idade Aprox.:</span>
+            <span class="val" id="pdf-aluno-idade">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Sexo:</span>
+            <span class="val" id="pdf-aluno-sexo">-</span>
+          </div>
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">CPF do Aluno:</span>
+            <span class="val" id="pdf-aluno-cpf">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">RG ou Certidão de Nascimento:</span>
+            <span class="val" id="pdf-aluno-rg">-</span>
+          </div>
+        </div>
+        <div class="pdf-grid-full">
+          <div class="pdf-info-box">
+            <span class="lbl">Alergias / Condições de Saúde / Cuidados Especiais:</span>
+            <span class="val" id="pdf-aluno-saude">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 3: Dados dos Pais / Responsável -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">
+          <i class="fa-solid fa-user-shield"></i> 3. FILIAÇÃO & RESPONSÁVEL LEGAL
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">Nome do Responsável:</span>
+            <span class="val bold-val" id="pdf-resp-nome">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Grau de Parentesco:</span>
+            <span class="val" id="pdf-resp-parentesco">-</span>
+          </div>
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">CPF do Responsável:</span>
+            <span class="val" id="pdf-resp-cpf">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">RG / Identidade:</span>
+            <span class="val" id="pdf-resp-rg">-</span>
+          </div>
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">WhatsApp Principal:</span>
+            <span class="val" id="pdf-resp-whats">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Telefone de Recado:</span>
+            <span class="val" id="pdf-resp-recado">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco 4: Endereço -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">
+          <i class="fa-solid fa-house"></i> 4. RESIDÊNCIA DA FAMÍLIA
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">Comunidade / Localidade:</span>
+            <span class="val" id="pdf-end-bairro">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Cidade / Estado:</span>
+            <span class="val" id="pdf-end-cidade">Amontada - CE</span>
+          </div>
+        </div>
+        <div class="pdf-grid-2">
+          <div class="pdf-info-box">
+            <span class="lbl">Rua / Travessa e Nº:</span>
+            <span class="val" id="pdf-end-rua">-</span>
+          </div>
+          <div class="pdf-info-box">
+            <span class="lbl">Ponto de Referência:</span>
+            <span class="val" id="pdf-end-ref">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avisos e Documentos para Efetivação Presencial -->
+      <div class="pdf-checklist-box">
+        <strong>DOCUMENTOS EXIGIDOS PARA A CONFIRMAÇÃO PRESENCIAL DA MATRÍCULA:</strong>
+        <p>1. Cópia da Certidão de Nascimento do Aluno &bull; 2. Cópia do CPF do Aluno e do Responsável &bull; 3. Cópia do Comprovante de Residência &bull; 4. Cópia do Cartão de Vacina Atualizado &bull; 5. Cópia do Cartão do SUS e NIS (Bolsa Família) &bull; 6. 2 Fotos 3x4 da criança.</p>
+      </div>
+
+      <!-- Assinaturas -->
+      <div class="pdf-signatures-row">
+        <div class="pdf-sign-box">
+          <div class="sign-line"></div>
+          <span>Assinatura do Pai, Mãe ou Responsável Legal</span>
+        </div>
+        <div class="pdf-sign-box">
+          <div class="sign-line"></div>
+          <span>Visto / Carimbo da Secretaria Escolar</span>
+          <small>CEI Rita Pinto de Sousa &bull; Varjota</small>
+        </div>
+      </div>
+
+      <!-- Rodapé do PDF -->
+      <div class="pdf-footer-bar">
+        <span>Secretaria Escolar: (88) 99654-5870 &bull; CEI Rita Pinto de Sousa &bull; Varjota, Amontada/CE</span>
+        <span>Documento eletrônico autenticado sob protocolo oficial</span>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toast" class="toast hidden"></div>
 
@@ -400,4 +615,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

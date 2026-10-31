@@ -1,6 +1,6 @@
 /**
  * CEI Rita Pinto de Sousa - Varjota, Amontada - CE
- * Script de Pré-Matrículas Escolares 2026
+ * Script de Pré-Matrículas Escolares 2026 com Geração de PDF Moderno
  * Otimizado para Bio do Instagram & WhatsApp (88) 99654-5870
  */
 
@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnModalWhats = document.getElementById('btnModalWhats');
   const btnCopiarDados = document.getElementById('btnCopiarDados');
   const btnNovaInscricao = document.getElementById('btnNovaInscricao');
+  const btnBaixarPdfNovamente = document.getElementById('btnBaixarPdfNovamente');
+  const pdfFileNameEl = document.getElementById('pdfFileName');
 
   const historicoModal = document.getElementById('historicoModal');
   const btnVerHistorico = document.getElementById('btnVerHistorico');
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
 
   let currentWhatsMessage = '';
+  let dadosAtuais = null;
 
   // =========================================================================
   // MÁSCARAS DE ENTRADA (CPF & TELEFONE)
@@ -107,10 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
   restaurarRascunho();
 
   // =========================================================================
-  // VALIDAÇÃO & SUBMISSÃO DO FORMULÁRIO
+  // VALIDAÇÃO & SUBMISSÃO DO FORMULÁRIO COM GERAÇÃO DE PDF
   // =========================================================================
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Limpar estados de erro prévios
@@ -163,13 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Feedback de carregamento no botão
+    const originalBtnText = btnSubmit.innerHTML;
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = `
+      <i class="fa-solid fa-spinner fa-spin icon-large"></i>
+      <span class="btn-text">
+        <strong>GERANDO PDF OFICIAL...</strong>
+        <small>Aguarde um instante enquanto preparamos seu documento</small>
+      </span>
+    `;
+
     // Obter todos os valores
     const dataNascimento = document.getElementById('dataNasc').value;
     const dataNascFormatada = formatarDataBrasileira(dataNascimento);
     const idadeAprox = calcularIdade(dataNascimento);
 
-    const dadosMatricula = {
-      id: 'MAT-' + Date.now().toString().slice(-6),
+    const protocolNum = 'MAT2026-' + Date.now().toString().slice(-6);
+
+    dadosMatricula = {
+      id: protocolNum,
       dataEnvio: new Date().toLocaleString('pt-BR'),
       serie: serieChecked.value,
       turno: document.getElementById('turno').value,
@@ -192,67 +208,132 @@ document.addEventListener('DOMContentLoaded', () => {
       pontoReferencia: document.getElementById('pontoReferencia').value.trim() || 'Não informado',
     };
 
-    // Montar mensagem limpa e organizada para o WhatsApp da escola
-    const msgWhatsApp = montarMensagemWhatsApp(dadosMatricula);
+    dadosAtuais = dadosMatricula;
+
+    // 1. Preencher a folha A4 do PDF Oficial
+    preencherFolhaPdf(dadosMatricula);
+
+    // 2. Gerar e baixar o PDF no celular/computador
+    const nomeArquivoPdf = `Pre-Matricula-2026-${sanitizarNome(dadosMatricula.nomeAluno)}.pdf`;
+    if (pdfFileNameEl) pdfFileNameEl.textContent = nomeArquivoPdf;
+
+    try {
+      await gerarEDownloadPdf(nomeArquivoPdf);
+      showToast('📄 Comprovante em PDF baixado com sucesso!');
+    } catch (err) {
+      console.warn('Erro na geração via html2pdf, acionando fallback:', err);
+    }
+
+    // 3. Montar mensagem oficial para o WhatsApp
+    const msgWhatsApp = montarMensagemWhatsApp(dadosMatricula, nomeArquivoPdf);
     currentWhatsMessage = msgWhatsApp;
 
-    // Salvar no histórico local
+    // 4. Salvar no histórico local
     salvarNoHistorico(dadosMatricula);
 
-    // Limpar rascunho
+    // 5. Limpar rascunho
     localStorage.removeItem(DRAFT_KEY);
 
-    // Preparar link de envio
+    // 6. Preparar link de envio para o WhatsApp
     const whatsUrl = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(msgWhatsApp)}`;
 
-    // Exibir Modal de Confirmação com Comprovante
+    // 7. Renderizar dados no Modal
     renderizarComprovanteModal(dadosMatricula);
     btnModalWhats.href = whatsUrl;
     successModal.classList.remove('hidden');
 
-    // Tentar redirecionar automaticamente para o WhatsApp
+    // Restaurar botão
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = originalBtnText;
+
+    // Redirecionamento amigável para o WhatsApp após 1.5s (dá tempo do download iniciar)
     setTimeout(() => {
-      window.location.href = whatsUrl;
-    }, 600);
+      window.open(whatsUrl, '_blank');
+    }, 1400);
+  });
+
+  // =========================================================================
+  // PREENCHIMENTO & GERAÇÃO DO DOCUMENTO PDF
+  // =========================================================================
+
+  function preencherFolhaPdf(d) {
+    document.getElementById('pdf-proto').textContent = '#' + d.id;
+    document.getElementById('pdf-data-emissao').textContent = d.dataEnvio;
+    document.getElementById('pdf-turma').textContent = d.serie;
+    document.getElementById('pdf-turno').textContent = d.turno;
+
+    document.getElementById('pdf-aluno-nome').textContent = d.nomeAluno;
+    document.getElementById('pdf-aluno-nasc').textContent = d.dataNascimento;
+    document.getElementById('pdf-aluno-idade').textContent = d.idade;
+    document.getElementById('pdf-aluno-sexo').textContent = d.sexo;
+    document.getElementById('pdf-aluno-cpf').textContent = d.cpfAluno;
+    document.getElementById('pdf-aluno-rg').textContent = d.rgCertidaoAluno;
+    document.getElementById('pdf-aluno-saude').textContent = d.necessidadesSaude;
+
+    document.getElementById('pdf-resp-nome').textContent = d.nomeResponsavel;
+    document.getElementById('pdf-resp-parentesco').textContent = d.parentesco;
+    document.getElementById('pdf-resp-cpf').textContent = d.cpfResponsavel;
+    document.getElementById('pdf-resp-rg').textContent = d.rgResponsavel;
+    document.getElementById('pdf-resp-whats').textContent = d.telefoneResp;
+    document.getElementById('pdf-resp-recado').textContent = d.telefoneRecado;
+
+    document.getElementById('pdf-end-bairro').textContent = d.comunidadeBairro;
+    document.getElementById('pdf-end-cidade').textContent = d.cidadeUf;
+    document.getElementById('pdf-end-rua').textContent = d.ruaNumero;
+    document.getElementById('pdf-end-ref').textContent = d.pontoReferencia;
+  }
+
+  async function gerarEDownloadPdf(nomeArquivo) {
+    const elemento = document.getElementById('pdf-document');
+    
+    // Se a biblioteca html2pdf estiver disponível
+    if (typeof html2pdf !== 'undefined') {
+      const opt = {
+        margin: [6, 6, 6, 6],
+        filename: nomeArquivo,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      return html2pdf().set(opt).from(elemento).save();
+    } else {
+      // Fallback nativo do navegador
+      window.print();
+    }
+  }
+
+  btnBaixarPdfNovamente.addEventListener('click', async () => {
+    if (!dadosAtuais) return;
+    const nomeArquivoPdf = `Pre-Matricula-2026-${sanitizarNome(dadosAtuais.nomeAluno)}.pdf`;
+    showToast('Baixando PDF novamente...');
+    await gerarEDownloadPdf(nomeArquivoPdf);
   });
 
   // =========================================================================
   // FORMATAÇÃO DA MENSAGEM WHATSAPP
   // =========================================================================
 
-  function montarMensagemWhatsApp(d) {
+  function montarMensagemWhatsApp(d, nomePdf) {
     return `🏫 *PRÉ-MATRÍCULA 2026*
 *CEI RITA PINTO DE SOUSA*
 📍 Varjota • Amontada - CE
 Protocolo: #${d.id}
 ━━━━━━━━━━━━━━━━━━━━━━━
 
-🎒 *TURMA / SÉRIE:* ${d.serie}
-⏰ *TURNO:* ${d.turno}
+Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo site.
 
-👶 *DADOS DO ALUNO(A):*
-• *Nome:* ${d.nomeAluno}
-• *Nascimento:* ${d.dataNascimento} (${d.idade})
-• *Sexo:* ${d.sexo}
-• *CPF do Aluno:* ${d.cpfAluno}
-• *RG / Certidão:* ${d.rgCertidaoAluno}
-• *Saúde / Cuidados:* ${d.necessidadesSaude}
+🎒 *Turma:* ${d.serie}
+⏰ *Turno:* ${d.turno}
+👶 *Aluno(a):* ${d.nomeAluno} (${d.idade})
+👨‍👩‍👧 *Responsável:* ${d.nomeResponsavel} (${d.parentesco})
+📞 *WhatsApp:* ${d.telefoneResp}
+🏠 *Endereço:* ${d.comunidadeBairro}, ${d.ruaNumero} - Amontada/CE
 
-👨‍👩‍👧 *DADOS DO RESPONSÁVEL:*
-• *Responsável:* ${d.nomeResponsavel}
-• *Parentesco:* ${d.parentesco}
-• *CPF:* ${d.cpfResponsavel}
-• *RG:* ${d.rgResponsavel}
-• *WhatsApp:* ${d.telefoneResp}
-• *Telefone Recado:* ${d.telefoneRecado}
+📎 *Estou anexando aqui no WhatsApp o PDF oficial:*
+📄 _${nomePdf}_
 
-🏠 *ENDEREÇO RESIDENCIAL:*
-• *Comunidade/Bairro:* ${d.comunidadeBairro}
-• *Rua / Nº:* ${d.ruaNumero}
-• *Ponto de Ref.:* ${d.pontoReferencia}
-• *Município:* ${d.cidadeUf}
 ━━━━━━━━━━━━━━━━━━━━━━━
-📅 *Enviado via Link da Bio em:* ${d.dataEnvio}`;
+📅 *Data:* ${d.dataEnvio}`;
   }
 
   function renderizarComprovanteModal(d) {
@@ -278,10 +359,6 @@ Protocolo: #${d.id}
         <span class="receipt-val">${d.nomeResponsavel} (${d.parentesco})</span>
       </div>
       <div class="receipt-item">
-        <span class="receipt-label">WhatsApp Contato:</span>
-        <span class="receipt-val">${d.telefoneResp}</span>
-      </div>
-      <div class="receipt-item">
         <span class="receipt-label">Localidade:</span>
         <span class="receipt-val">${d.comunidadeBairro}, Amontada-CE</span>
       </div>
@@ -297,7 +374,6 @@ Protocolo: #${d.id}
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(currentWhatsMessage);
       } else {
-        // Fallback para navegadores antigos
         const tempText = document.createElement('textarea');
         tempText.value = currentWhatsMessage;
         document.body.appendChild(tempText);
@@ -305,7 +381,7 @@ Protocolo: #${d.id}
         document.execCommand('copy');
         document.body.removeChild(tempText);
       }
-      showToast('📋 Mensagem copiada com sucesso! Cole no WhatsApp.');
+      showToast('📋 Resumo copiado com sucesso! Cole no WhatsApp.');
     } catch (err) {
       showToast('Erro ao copiar dados automaticamente.');
     }
@@ -326,7 +402,6 @@ Protocolo: #${d.id}
   function salvarNoHistorico(registro) {
     let lista = obterHistorico();
     lista.unshift(registro);
-    // Limita aos últimos 50 cadastros neste aparelho
     if (lista.length > 50) lista = lista.slice(0, 50);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
   }
@@ -380,7 +455,6 @@ Protocolo: #${d.id}
     historicoModal.classList.add('hidden');
   });
 
-  // Fechar ao clicar fora do card
   window.addEventListener('click', (e) => {
     if (e.target === historicoModal) historicoModal.classList.add('hidden');
     if (e.target === successModal) successModal.classList.add('hidden');
@@ -450,7 +524,7 @@ Protocolo: #${d.id}
       i.cidadeUf,
     ]);
 
-    let csvContent = '\uFEFF'; // BOM para o Excel abrir com acentuação correta em UTF-8
+    let csvContent = '\uFEFF';
     csvContent += headers.map((h) => `"${h}"`).join(';') + '\r\n';
 
     rows.forEach((row) => {
@@ -493,12 +567,21 @@ Protocolo: #${d.id}
     return anos > 0 ? `${anos} anos` : `${anos} ano`;
   }
 
+  function sanitizarNome(nome) {
+    if (!nome) return 'Aluno';
+    return nome
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9]/g, '_')
+      .replace(/_+/g, '_');
+  }
+
   function showToast(mensagem) {
     toast.textContent = mensagem;
     toast.classList.remove('hidden');
     setTimeout(() => {
       toast.classList.add('hidden');
-    }, 3800);
+    }, 4000);
   }
 
   function escapeHtml(str) {
@@ -511,4 +594,3 @@ Protocolo: #${d.id}
       .replace(/'/g, '&#039;');
   }
 });
-
