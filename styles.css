@@ -925,22 +925,30 @@ select.form-control {
    DOCUMENTO OFICIAL EM PDF (ESTRUTURA PARA RENDERIZAÇÃO)
    ===================================================================== */
 .pdf-render-wrapper {
-  position: absolute;
-  top: 0;
-  left: -99999px;
-  width: 780px;
-  background-color: #ffffff;
-  display: block;
+  position: fixed !important;
+  top: 0 !important;
+  left: -99999px !important;
+  width: 780px !important;
+  min-width: 780px !important;
+  max-width: 780px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-self: flex-start !important; /* IMPEDE O CENTERING DO FLEX DO BODY */
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  z-index: -99999 !important;
 }
 
 .official-pdf-sheet {
-  width: 780px;
-  background-color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #0f172a;
-  padding: 24px 28px;
-  box-sizing: border-box;
-  border: 1px solid #cbd5e1;
+  width: 780px !important;
+  max-width: 780px !important;
+  background-color: #ffffff !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  color: #0f172a !important;
+  padding: 22px 24px !important;
+  box-sizing: border-box !important;
+  border: 1px solid #94a3b8 !important;
+  margin: 0 !important;
 }
 
 .pdf-header {
@@ -958,8 +966,8 @@ select.form-control {
 }
 
 .pdf-crest {
-  width: 54px;
-  height: 54px;
+  width: 52px;
+  height: 52px;
   background-color: #1e3a8a;
   border-radius: 50%;
   display: flex;
@@ -1087,7 +1095,7 @@ select.form-control {
 
 .pdf-grid-3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr 1fr;
   gap: 6px;
   margin-bottom: 5px;
 }
@@ -1209,16 +1217,16 @@ select.form-control {
     visibility: visible;
   }
   #pdfWrapper {
-    position: absolute;
+    position: absolute !important;
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
     display: block !important;
   }
   .official-pdf-sheet {
-    border: none;
-    padding: 0;
-    width: 100%;
+    border: none !important;
+    padding: 0 !important;
+    width: 100% !important;
   }
 }
 

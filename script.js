@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================================================================
-  // PREENCHIMENTO & GERAÇÃO ROBUSTA DO DOCUMENTO PDF
+  // PREENCHIMENTO & GERAÇÃO ROBUSTA DO DOCUMENTO PDF (SEM CORTES)
   // =========================================================================
 
   function preencherFolhaPdf(d) {
@@ -289,29 +289,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('pdfWrapper');
     const elemento = document.getElementById('pdf-document');
 
-    // Guardar scroll original
+    // Salvar estilos e scroll original
     const scrollOrigX = window.scrollX || window.pageXOffset || 0;
     const scrollOrigY = window.scrollY || window.pageYOffset || 0;
+    const originalBodyJustify = document.body.style.justifyContent;
 
-    // Trazer para coordenadas (0,0) na tela com layout completo para captura do html2canvas
-    wrapper.style.position = 'fixed';
-    wrapper.style.top = '0px';
-    wrapper.style.left = '0px';
-    wrapper.style.zIndex = '5000'; // atrás do modal de sucesso (9999)
-    wrapper.style.display = 'block';
-    wrapper.style.visibility = 'visible';
-    wrapper.style.opacity = '1';
+    // Desativar justify-content center do body durante o print para NUNCA empurrar para coordenadas negativas
+    document.body.style.justifyContent = 'flex-start';
 
-    // Rolar para o topo temporariamente para evitar que o html2canvas corte o topo
+    // Mover wrapper diretamente para o body para desvincular de qualquer layout
+    document.body.appendChild(wrapper);
+
+    // Posicionamento absoluto fixo em (0, 0)
+    wrapper.style.cssText = `
+      position: fixed !important;
+      top: 0px !important;
+      left: 0px !important;
+      margin: 0px !important;
+      padding: 0px !important;
+      width: 780px !important;
+      min-width: 780px !important;
+      max-width: 780px !important;
+      transform: none !important;
+      align-self: flex-start !important;
+      z-index: 5000 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      background: #ffffff !important;
+    `;
+
     window.scrollTo(0, 0);
 
     // Aguardar o navegador recalcular layout
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 350));
 
     try {
       if (typeof html2pdf !== 'undefined') {
         const opt = {
-          margin: 0,
+          margin: [8, 8, 8, 8], // 8mm de margem perfeitamente uniforme (evita cortes no topo, esquerda, direita e base)
           filename: nomeArquivo,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
@@ -320,6 +336,9 @@ document.addEventListener('DOMContentLoaded', () => {
             logging: false,
             scrollX: 0,
             scrollY: 0,
+            x: 0,
+            y: 0,
+            width: 780,
             windowWidth: 780
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -330,10 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
         window.print();
       }
     } finally {
-      // Ocultar novamente o wrapper e restaurar posição de rolagem
-      wrapper.style.position = 'absolute';
-      wrapper.style.left = '-99999px';
-      wrapper.style.top = '0px';
+      // Restaurar tudo ao estado original
+      wrapper.style.cssText = `
+        position: fixed !important;
+        left: -99999px !important;
+        top: 0px !important;
+        width: 780px !important;
+        display: none !important;
+        visibility: hidden !important;
+      `;
+      document.body.style.justifyContent = originalBodyJustify;
       window.scrollTo(scrollOrigX, scrollOrigY);
     }
   }
@@ -585,7 +610,7 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
   });
 
   // =========================================================================
-  // UTILITÁRIOS (DATA, IDADE, TOAST)
+  // UTILITÁRIOS (DATA, IDADE ROBUSTA, TOAST)
   // =========================================================================
 
   function formatarDataBrasileira(dataIso) {
@@ -598,15 +623,33 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
   }
 
   function calcularIdade(dataIso) {
-    if (!dataIso) return '';
-    const hoje = new Date();
-    const nasc = new Date(dataIso);
-    let anos = hoje.getFullYear() - nasc.getFullYear();
-    const m = hoje.getMonth() - nasc.getMonth();
-    if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
-      anos--;
+    if (!dataIso) return 'A conferir';
+    const partes = dataIso.split('-');
+    if (partes.length === 3) {
+      const ano = parseInt(partes[0], 10);
+      const mes = parseInt(partes[1], 10) - 1;
+      const dia = parseInt(partes[2], 10);
+
+      if (isNaN(ano) || isNaN(mes) || isNaN(dia) || ano < 1990 || ano > 2030) {
+        return 'A conferir';
+      }
+
+      const hoje = new Date();
+      const nasc = new Date(ano, mes, dia);
+
+      let anos = hoje.getFullYear() - nasc.getFullYear();
+      const m = hoje.getMonth() - nasc.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
+        anos--;
+      }
+
+      if (anos < 0 || anos > 20 || isNaN(anos)) {
+        return 'A conferir';
+      }
+
+      return anos === 1 ? '1 ano' : `${anos} anos`;
     }
-    return anos > 0 ? `${anos} anos` : `${anos} ano`;
+    return 'A conferir';
   }
 
   function sanitizarNome(nome) {
