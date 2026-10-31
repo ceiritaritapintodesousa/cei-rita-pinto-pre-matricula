@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1e40af">
+  <meta name="description" content="Pré-Matrículas Escolares 2026 - CEI Rita Pinto de Sousa, Varjota, Amontada - CE. Garanta a vaga da Educação Infantil do seu filho de forma rápida e prática!">
+  
+  <title>Pré-Matrículas 2026 | CEI Rita Pinto de Sousa</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Container Principal Mobile -->
+  <div class="app-wrapper">
+    
+    <!-- Top Bar / Aviso -->
+    <header class="school-header">
+      <div class="header-decoration">
+        <span class="shape shape-1">🌟</span>
+        <span class="shape shape-2">🎨</span>
+        <span class="shape shape-3">✏️</span>
+        <span class="shape shape-4">📚</span>
+      </div>
+
+      <div class="badge-tag">
+        <i class="fa-solid fa-graduation-cap"></i> Ano Letivo 2026
+      </div>
+
+      <div class="school-identity">
+        <div class="school-logo-circle">
+          <i class="fa-solid fa-shapes"></i>
+        </div>
+        <h1 class="school-name">CEI Rita Pinto de Sousa</h1>
+        <p class="school-location">
+          <i class="fa-solid fa-location-dot"></i> Varjota &bull; Amontada &bull; CE
+        </p>
+      </div>
+
+      <div class="hero-callout">
+        <h2>Pré-Matrícula Online</h2>
+        <p>Preencha os dados abaixo pelo celular para solicitar a vaga do seu filho(a). É rápido, fácil e seguro!</p>
+      </div>
+
+      <div class="status-pill">
+        <span class="dot-live"></span> Inscrições Abertas &bull; Vagas Limitadas
+      </div>
+    </header>
+
+    <!-- Formulário Principal -->
+    <main class="form-container">
+      <form id="preMatriculaForm" novalidate>
+        
+        <!-- SEÇÃO 1: SÉRIE / TURMA PRETENDIDA -->
+        <section class="form-card">
+          <div class="card-header">
+            <div class="step-num">1</div>
+            <div>
+              <h3 class="card-title">Escolha a Série / Turma *</h3>
+              <p class="card-subtitle">Selecione o ano escolar correspondente à idade da criança</p>
+            </div>
+          </div>
+
+          <div class="turmas-grid">
+            <label class="turma-option">
+              <input type="radio" name="serie" value="Infantil II (2 anos)" required>
+              <div class="turma-box">
+                <span class="turma-tag color-orange">2 anos</span>
+                <span class="turma-title">Infantil II</span>
+                <span class="turma-desc">Crianças completando 2 anos</span>
+              </div>
+            </label>
+
+            <label class="turma-option">
+              <input type="radio" name="serie" value="Infantil III (3 anos)">
+              <div class="turma-box">
+                <span class="turma-tag color-green">3 anos</span>
+                <span class="turma-title">Infantil III</span>
+                <span class="turma-desc">Crianças completando 3 anos</span>
+              </div>
+            </label>
+
+            <label class="turma-option">
+              <input type="radio" name="serie" value="Infantil IV (4 anos)">
+              <div class="turma-box">
+                <span class="turma-tag color-blue">4 anos</span>
+                <span class="turma-title">Infantil IV</span>
+                <span class="turma-desc">Crianças completando 4 anos</span>
+              </div>
+            </label>
+
+            <label class="turma-option">
+              <input type="radio" name="serie" value="Infantil V (5 anos)">
+              <div class="turma-box">
+                <span class="turma-tag color-purple">5 anos</span>
+                <span class="turma-title">Infantil V</span>
+                <span class="turma-desc">Crianças completando 5 anos</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Turno Pretendido -->
+          <div class="form-group mt-3">
+            <label for="turno" class="form-label">Turno de Preferência *</label>
+            <div class="custom-select-wrapper">
+              <select id="turno" name="turno" class="form-control" required>
+                <option value="" disabled selected>Selecione o turno</option>
+                <option value="Manhã">Manhã (Matutino)</option>
+                <option value="Tarde">Tarde (Vespertino)</option>
+                <option value="Integral">Tempo Integral (se disponível)</option>
+                <option value="Indiferente">Qualquer Turno (O que houver vaga)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 2: DADOS DO ALUNO -->
+        <section class="form-card">
+          <div class="card-header">
+            <div class="step-num">2</div>
+            <div>
+              <h3 class="card-title">Dados do Aluno(a)</h3>
+              <p class="card-subtitle">Informações da criança a ser matriculada</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nomeAluno" class="form-label">Nome Completo da Criança *</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-child input-icon"></i>
+              <input type="text" id="nomeAluno" name="nomeAluno" class="form-control" placeholder="Ex: Maria Clara da Silva" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="dataNasc" class="form-label">Data de Nascimento *</label>
+              <div class="input-with-icon">
+                <i class="fa-regular fa-calendar input-icon"></i>
+                <input type="date" id="dataNasc" name="dataNasc" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="sexoAluno" class="form-label">Sexo *</label>
+              <select id="sexoAluno" name="sexoAluno" class="form-control" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="Feminino">Feminino</option>
+                <option value="Masculino">Masculino</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="cpfAluno" class="form-label">CPF da Criança *</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-id-card input-icon"></i>
+                <input type="tel" id="cpfAluno" name="cpfAluno" class="form-control mask-cpf" placeholder="000.000.000-00" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="rgCertidaoAluno" class="form-label">RG ou Certidão de Nasc. *</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-file-lines input-icon"></i>
+                <input type="text" id="rgCertidaoAluno" name="rgCertidaoAluno" class="form-control" placeholder="Nº do RG ou Certidão" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="necessidadesSaude" class="form-label">
+              Possui alguma alergia, condição médica ou necessidade especial?
+            </label>
+            <input type="text" id="necessidadesSaude" name="necessidadesSaude" class="form-control" placeholder="Ex: Alergia a lactose, autismo, nenhuma, etc.">
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3: DADOS DOS PAIS / RESPONSÁVEL LEGAL -->
+        <section class="form-card">
+          <div class="card-header">
+            <div class="step-num">3</div>
+            <div>
+              <h3 class="card-title">Dados do Pai / Mãe ou Responsável</h3>
+              <p class="card-subtitle">Pessoa responsável pela matrícula e contato</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nomeResponsavel" class="form-label">Nome Completo do Responsável *</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-user-tie input-icon"></i>
+              <input type="text" id="nomeResponsavel" name="nomeResponsavel" class="form-control" placeholder="Ex: Ana Paula de Sousa" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="parentesco" class="form-label">Grau de Parentesco *</label>
+              <select id="parentesco" name="parentesco" class="form-control" required>
+                <option value="" disabled selected>Selecione</option>
+                <option value="Mãe">Mãe</option>
+                <option value="Pai">Pai</option>
+                <option value="Avó/Avô">Avó / Avô</option>
+                <option value="Tia/Tio">Tia / Tio</option>
+                <option value="Responsável Legal">Outro Responsável Legal</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfResponsavel" class="form-label">CPF do Responsável *</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-id-badge input-icon"></i>
+                <input type="tel" id="cpfResponsavel" name="cpfResponsavel" class="form-control mask-cpf" placeholder="000.000.000-00" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="rgResponsavel" class="form-label">Identidade / RG do Responsável *</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-address-card input-icon"></i>
+                <input type="text" id="rgResponsavel" name="rgResponsavel" class="form-control" placeholder="Ex: 20080123456" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="telefoneResp" class="form-label">WhatsApp Principal *</label>
+              <div class="input-with-icon">
+                <i class="fa-brands fa-whatsapp input-icon color-whats"></i>
+                <input type="tel" id="telefoneResp" name="telefoneResp" class="form-control mask-phone" placeholder="(88) 90000-0000" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="telefoneRecado" class="form-label">Telefone de Recado (Opcional)</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input type="tel" id="telefoneRecado" name="telefoneRecado" class="form-control mask-phone" placeholder="(88) 90000-0000">
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 4: ENDEREÇO RESIDENCIAL -->
+        <section class="form-card">
+          <div class="card-header">
+            <div class="step-num">4</div>
+            <div>
+              <h3 class="card-title">Endereço Residencial</h3>
+              <p class="card-subtitle">Local onde a família e o aluno residem</p>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="comunidadeBairro" class="form-label">Comunidade / Localidade / Bairro *</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-map-pin input-icon"></i>
+                <input type="text" id="comunidadeBairro" name="comunidadeBairro" class="form-control" placeholder="Ex: Varjota, Centro, etc." value="Varjota" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cidadeUf" class="form-label">Cidade / Estado</label>
+              <input type="text" id="cidadeUf" name="cidadeUf" class="form-control readonly-input" value="Amontada - CE" readonly>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ruaNumero" class="form-label">Rua / Travessa e Número *</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-house input-icon"></i>
+              <input type="text" id="ruaNumero" name="ruaNumero" class="form-control" placeholder="Ex: Rua Principal, nº 120 ou S/N" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="pontoReferencia" class="form-label">Ponto de Referência (Opcional)</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-compass input-icon"></i>
+              <input type="text" id="pontoReferencia" name="pontoReferencia" class="form-control" placeholder="Ex: Próximo ao posto de saúde, perto da pracinha...">
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO DE ENVIO E GARANTIA -->
+        <div class="submit-section">
+          <div class="security-info">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Seus dados são transmitidos com segurança e enviados diretamente para o WhatsApp oficial da escola: <strong>(88) 99654-5870</strong></span>
+          </div>
+
+          <button type="submit" id="btnSubmit" class="btn-whatsapp-submit">
+            <i class="fa-brands fa-whatsapp icon-large"></i>
+            <span class="btn-text">
+              <strong>ENVIAR PRÉ-MATRÍCULA AGORA</strong>
+              <small>Confirmar dados e enviar no WhatsApp da Escola</small>
+            </span>
+            <i class="fa-solid fa-arrow-right icon-arrow"></i>
+          </button>
+        </div>
+
+      </form>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="app-footer">
+      <div class="footer-contacts">
+        <p><strong>CEI Rita Pinto de Sousa</strong></p>
+        <p>Educação Infantil de Qualidade &bull; Varjota &bull; Amontada - CE</p>
+        <p class="whats-link">
+          <a href="https://wa.me/5588996545870?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20as%20matr%C3%ADculas%202026." target="_blank" rel="noopener">
+            <i class="fa-brands fa-whatsapp"></i> Fale com a Secretaria: (88) 99654-5870
+          </a>
+        </p>
+      </div>
+
+      <div class="footer-actions">
+        <button id="btnVerHistorico" type="button" class="btn-outline-small">
+          <i class="fa-solid fa-list-check"></i> Consultar Cadastros Deste Aparelho
+        </button>
+      </div>
+
+      <p class="copyright">
+        &copy; 2026 CEI Rita Pinto de Sousa &bull; Todos os direitos reservados.
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- MODAL DE SUCESSO / CONFIRMAÇÃO -->
+  <div id="successModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-confetti">🎉</div>
+      <div class="modal-icon-check">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3>Pré-Matrícula Gerada!</h3>
+      <p class="modal-p">
+        Os dados da pré-matrícula foram organizados com sucesso para a secretaria do <strong>CEI Rita Pinto de Sousa</strong>.
+      </p>
+
+      <div class="receipt-box" id="receiptSummary">
+        <!-- Preenchido via Javascript -->
+      </div>
+
+      <div class="modal-buttons">
+        <a id="btnModalWhats" href="#" target="_blank" class="btn-primary-action">
+          <i class="fa-brands fa-whatsapp"></i> Abrir WhatsApp e Enviar Mensagem
+        </a>
+
+        <button type="button" id="btnCopiarDados" class="btn-secondary-action">
+          <i class="fa-regular fa-copy"></i> Copiar Mensagem da Inscrição
+        </button>
+
+        <button type="button" id="btnNovaInscricao" class="btn-text-action">
+          <i class="fa-solid fa-plus"></i> Fazer Outra Pré-Matrícula
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE HISTÓRICO LOCAL (BACKUP DA SECRETARIA) -->
+  <div id="historicoModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-large">
+      <div class="modal-header-row">
+        <h3><i class="fa-solid fa-folder-open"></i> Registros Salvos Neste Aparelho</h3>
+        <button type="button" id="fecharHistorico" class="btn-close">&times;</button>
+      </div>
+      <p class="text-muted">Todas as pré-matrículas enviadas por este celular/computador ficam salvas aqui como cópia de segurança:</p>
+      
+      <div id="historicoList" class="historico-container">
+        <!-- Preenchido via Javascript -->
+      </div>
+
+      <div class="modal-footer-row">
+        <button type="button" id="btnExportarCsv" class="btn-secondary-action">
+          <i class="fa-solid fa-file-excel"></i> Baixar Tabela (CSV / Excel)
+        </button>
+        <button type="button" id="btnLimparHistorico" class="btn-text-danger">
+          <i class="fa-regular fa-trash-can"></i> Limpar Histórico Local
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Script Principal -->
+  <script src="script.js"></script>
+</body>
+</html>
+
