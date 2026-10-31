@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCopiarDados = document.getElementById('btnCopiarDados');
   const btnNovaInscricao = document.getElementById('btnNovaInscricao');
   const btnBaixarPdfNovamente = document.getElementById('btnBaixarPdfNovamente');
+  const btnImprimirPdf = document.getElementById('btnImprimirPdf');
   const pdfFileNameEl = document.getElementById('pdfFileName');
 
   const historicoModal = document.getElementById('historicoModal');
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dadosAtuais = dadosMatricula;
 
-    // 1. Preencher a folha A4 do PDF Oficial
+    // 1. Preencher a folha do PDF Oficial
     preencherFolhaPdf(dadosMatricula);
 
     // 2. Gerar e baixar o PDF no celular/computador
@@ -221,7 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
       await gerarEDownloadPdf(nomeArquivoPdf);
       showToast('📄 Comprovante em PDF baixado com sucesso!');
     } catch (err) {
-      console.warn('Erro na geração via html2pdf, acionando fallback:', err);
+      console.warn('Erro na geração via html2pdf:', err);
+      showToast('⚠️ Use o botão "Visualizar / Imprimir PDF" para salvar o documento.');
     }
 
     // 3. Montar mensagem oficial para o WhatsApp
@@ -246,14 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSubmit.disabled = false;
     btnSubmit.innerHTML = originalBtnText;
 
-    // Redirecionamento amigável para o WhatsApp após 1.5s (dá tempo do download iniciar)
+    // Redirecionamento amigável para o WhatsApp após 1.6s
     setTimeout(() => {
       window.open(whatsUrl, '_blank');
-    }, 1400);
+    }, 1600);
   });
 
   // =========================================================================
-  // PREENCHIMENTO & GERAÇÃO DO DOCUMENTO PDF
+  // PREENCHIMENTO & GERAÇÃO ROBUSTA DO DOCUMENTO PDF
   // =========================================================================
 
   function preencherFolhaPdf(d) {
@@ -284,21 +286,55 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function gerarEDownloadPdf(nomeArquivo) {
+    const wrapper = document.getElementById('pdfWrapper');
     const elemento = document.getElementById('pdf-document');
-    
-    // Se a biblioteca html2pdf estiver disponível
-    if (typeof html2pdf !== 'undefined') {
-      const opt = {
-        margin: [6, 6, 6, 6],
-        filename: nomeArquivo,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-      return html2pdf().set(opt).from(elemento).save();
-    } else {
-      // Fallback nativo do navegador
-      window.print();
+
+    // Guardar scroll original
+    const scrollOrigX = window.scrollX || window.pageXOffset || 0;
+    const scrollOrigY = window.scrollY || window.pageYOffset || 0;
+
+    // Trazer para coordenadas (0,0) na tela com layout completo para captura do html2canvas
+    wrapper.style.position = 'fixed';
+    wrapper.style.top = '0px';
+    wrapper.style.left = '0px';
+    wrapper.style.zIndex = '5000'; // atrás do modal de sucesso (9999)
+    wrapper.style.display = 'block';
+    wrapper.style.visibility = 'visible';
+    wrapper.style.opacity = '1';
+
+    // Rolar para o topo temporariamente para evitar que o html2canvas corte o topo
+    window.scrollTo(0, 0);
+
+    // Aguardar o navegador recalcular layout
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    try {
+      if (typeof html2pdf !== 'undefined') {
+        const opt = {
+          margin: 0,
+          filename: nomeArquivo,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: 780
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        await html2pdf().set(opt).from(elemento).save();
+      } else {
+        window.print();
+      }
+    } finally {
+      // Ocultar novamente o wrapper e restaurar posição de rolagem
+      wrapper.style.position = 'absolute';
+      wrapper.style.left = '-99999px';
+      wrapper.style.top = '0px';
+      window.scrollTo(scrollOrigX, scrollOrigY);
     }
   }
 
@@ -308,6 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Baixando PDF novamente...');
     await gerarEDownloadPdf(nomeArquivoPdf);
   });
+
+  if (btnImprimirPdf) {
+    btnImprimirPdf.addEventListener('click', () => {
+      window.print();
+    });
+  }
 
   // =========================================================================
   // FORMATAÇÃO DA MENSAGEM WHATSAPP

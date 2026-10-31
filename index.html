@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- html2pdf.js para geração de PDF elegante no navegador -->
+  <!-- html2pdf.js Bundle para geração de PDF de alta fidelidade -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <link rel="stylesheet" href="styles.css">
@@ -384,6 +384,10 @@
           <i class="fa-solid fa-cloud-arrow-down"></i> Baixar PDF Novamente
         </button>
 
+        <button type="button" id="btnImprimirPdf" class="btn-secondary-action">
+          <i class="fa-solid fa-print"></i> Visualizar / Imprimir PDF
+        </button>
+
         <button type="button" id="btnCopiarDados" class="btn-secondary-action">
           <i class="fa-regular fa-copy"></i> Copiar Resumo em Texto
         </button>
@@ -422,16 +426,19 @@
   </div>
 
   <!-- =========================================================================
-       TEMPLATE OCULTO DO DOCUMENTO PDF OFICIAL (A4 - DESIGN MODERNO)
+       FOLHA DO DOCUMENTO PDF OFICIAL (A4 - DESIGN MODERNO)
        ========================================================================= -->
-  <div class="pdf-render-wrapper">
+  <div id="pdfWrapper" class="pdf-render-wrapper">
     <div id="pdf-document" class="official-pdf-sheet">
       
       <!-- Cabeçalho Oficial do PDF -->
       <div class="pdf-header">
         <div class="pdf-header-top">
           <div class="pdf-crest">
-            <i class="fa-solid fa-graduation-cap"></i>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
           </div>
           <div class="pdf-gov-info">
             <h4>MUNICÍPIO DE AMONTADA &bull; CEARÁ</h4>
@@ -459,7 +466,7 @@
       <!-- Bloco 1: Turma e Turno -->
       <div class="pdf-section">
         <div class="pdf-section-title">
-          <i class="fa-solid fa-book-open"></i> 1. VAGA PRETENDIDA
+          1. VAGA PRETENDIDA
         </div>
         <div class="pdf-grid-2">
           <div class="pdf-info-box">
@@ -476,7 +483,7 @@
       <!-- Bloco 2: Dados do Aluno -->
       <div class="pdf-section">
         <div class="pdf-section-title">
-          <i class="fa-solid fa-child"></i> 2. IDENTIFICAÇÃO DO ALUNO(A)
+          2. IDENTIFICAÇÃO DO ALUNO(A)
         </div>
         <div class="pdf-grid-full">
           <div class="pdf-info-box">
@@ -519,7 +526,7 @@
       <!-- Bloco 3: Dados dos Pais / Responsável -->
       <div class="pdf-section">
         <div class="pdf-section-title">
-          <i class="fa-solid fa-user-shield"></i> 3. FILIAÇÃO & RESPONSÁVEL LEGAL
+          3. FILIAÇÃO & RESPONSÁVEL LEGAL
         </div>
         <div class="pdf-grid-2">
           <div class="pdf-info-box">
@@ -556,7 +563,7 @@
       <!-- Bloco 4: Endereço -->
       <div class="pdf-section">
         <div class="pdf-section-title">
-          <i class="fa-solid fa-house"></i> 4. RESIDÊNCIA DA FAMÍLIA
+          4. RESIDÊNCIA DA FAMÍLIA
         </div>
         <div class="pdf-grid-2">
           <div class="pdf-info-box">
