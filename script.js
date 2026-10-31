@@ -1,14 +1,15 @@
 /**
  * CEI Rita Pinto de Sousa - Varjota, Amontada - CE
- * Script de Pré-Matrículas Escolares 2026 com Geração de PDF Moderno
- * Otimizado para Bio do Instagram & WhatsApp (88) 99654-5870
+ * Script de Pré-Matrículas Escolares 2027
+ * Design Inspirado em Android 17 / Material 3 Expressive
+ * WhatsApp: (88) 99654-5870
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Configurações Principais
   const WHATSAPP_PHONE = '5588996545870'; // 88 99654-5870 com código do país (55)
-  const STORAGE_KEY = 'cei_rita_pinto_matriculas_2026';
-  const DRAFT_KEY = 'cei_rita_pinto_draft_form';
+  const STORAGE_KEY = 'cei_rita_pinto_matriculas_2027';
+  const DRAFT_KEY = 'cei_rita_pinto_draft_form_2027';
 
   // Elementos do DOM
   const form = document.getElementById('preMatriculaForm');
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
   restaurarRascunho();
 
   // =========================================================================
-  // VALIDAÇÃO & SUBMISSÃO DO FORMULÁRIO COM GERAÇÃO DE PDF
+  // VALIDAÇÃO & SUBMISSÃO DO FORMULÁRIO COM GERAÇÃO DE PDF 2027
   // =========================================================================
 
   form.addEventListener('submit', async (e) => {
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Validação da Turma (Radio)
     const serieChecked = form.querySelector('input[name="serie"]:checked');
     if (!serieChecked) {
-      showToast('⚠️ Por favor, escolha a Série / Turma da criança!');
+      showToast('⚠️ Por favor, escolha a Série / Turma 2027 da criança!');
       const turmaBox = form.querySelector('.turmas-grid');
       turmaBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -167,13 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Feedback de carregamento no botão
+    // Feedback de carregamento no botão estilo Android 17
     const originalBtnText = btnSubmit.innerHTML;
     btnSubmit.disabled = true;
     btnSubmit.innerHTML = `
-      <i class="fa-solid fa-spinner fa-spin icon-large"></i>
+      <i class="fa-solid fa-spinner fa-spin icon-fab"></i>
       <span class="btn-text">
-        <strong>GERANDO PDF OFICIAL...</strong>
+        <strong>GERANDO PDF 2027...</strong>
         <small>Aguarde um instante enquanto preparamos seu documento</small>
       </span>
     `;
@@ -183,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataNascFormatada = formatarDataBrasileira(dataNascimento);
     const idadeAprox = calcularIdade(dataNascimento);
 
-    const protocolNum = 'MAT2026-' + Date.now().toString().slice(-6);
+    const protocolNum = 'MAT2027-' + Date.now().toString().slice(-6);
 
     dadosMatricula = {
       id: protocolNum,
@@ -211,22 +212,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dadosAtuais = dadosMatricula;
 
-    // 1. Preencher a folha do PDF Oficial
+    // 1. Preencher a folha do PDF Oficial 2027
     preencherFolhaPdf(dadosMatricula);
 
     // 2. Gerar e baixar o PDF no celular/computador
-    const nomeArquivoPdf = `Pre-Matricula-2026-${sanitizarNome(dadosMatricula.nomeAluno)}.pdf`;
+    const nomeArquivoPdf = `Pre-Matricula-2027-${sanitizarNome(dadosMatricula.nomeAluno)}.pdf`;
     if (pdfFileNameEl) pdfFileNameEl.textContent = nomeArquivoPdf;
 
     try {
       await gerarEDownloadPdf(nomeArquivoPdf);
-      showToast('📄 Comprovante em PDF baixado com sucesso!');
+      showToast('📄 Comprovante 2027 em PDF baixado com sucesso!');
     } catch (err) {
       console.warn('Erro na geração via html2pdf:', err);
       showToast('⚠️ Use o botão "Visualizar / Imprimir PDF" para salvar o documento.');
     }
 
-    // 3. Montar mensagem oficial para o WhatsApp
+    // 3. Montar mensagem oficial 2027 para o WhatsApp
     const msgWhatsApp = montarMensagemWhatsApp(dadosMatricula, nomeArquivoPdf);
     currentWhatsMessage = msgWhatsApp;
 
@@ -255,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================================================================
-  // PREENCHIMENTO & GERAÇÃO ROBUSTA DO DOCUMENTO PDF (SEM CORTES)
+  // PREENCHIMENTO & GERAÇÃO ROBUSTA DO DOCUMENTO PDF 2027 (SEM BORDAS QUADRADAS)
   // =========================================================================
 
   function preencherFolhaPdf(d) {
@@ -289,12 +290,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('pdfWrapper');
     const elemento = document.getElementById('pdf-document');
 
-    // Salvar estilos e scroll original
     const scrollOrigX = window.scrollX || window.pageXOffset || 0;
     const scrollOrigY = window.scrollY || window.pageYOffset || 0;
     const originalBodyJustify = document.body.style.justifyContent;
 
-    // Desativar justify-content center do body durante o print para NUNCA empurrar para coordenadas negativas
+    // Desativar justify-content center do body durante o print
     document.body.style.justifyContent = 'flex-start';
 
     // Mover wrapper diretamente para o body para desvincular de qualquer layout
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       if (typeof html2pdf !== 'undefined') {
         const opt = {
-          margin: [8, 8, 8, 8], // 8mm de margem perfeitamente uniforme (evita cortes no topo, esquerda, direita e base)
+          margin: [8, 8, 8, 8], // 8mm de margem perfeitamente uniforme
           filename: nomeArquivo,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
@@ -349,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.print();
       }
     } finally {
-      // Restaurar tudo ao estado original
       wrapper.style.cssText = `
         position: fixed !important;
         left: -99999px !important;
@@ -365,8 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnBaixarPdfNovamente.addEventListener('click', async () => {
     if (!dadosAtuais) return;
-    const nomeArquivoPdf = `Pre-Matricula-2026-${sanitizarNome(dadosAtuais.nomeAluno)}.pdf`;
-    showToast('Baixando PDF novamente...');
+    const nomeArquivoPdf = `Pre-Matricula-2027-${sanitizarNome(dadosAtuais.nomeAluno)}.pdf`;
+    showToast('Baixando PDF 2027 novamente...');
     await gerarEDownloadPdf(nomeArquivoPdf);
   });
 
@@ -377,26 +376,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // FORMATAÇÃO DA MENSAGEM WHATSAPP
+  // FORMATAÇÃO DA MENSAGEM WHATSAPP 2027
   // =========================================================================
 
   function montarMensagemWhatsApp(d, nomePdf) {
-    return `🏫 *PRÉ-MATRÍCULA 2026*
+    return `🏫 *PRÉ-MATRÍCULA 2027*
 *CEI RITA PINTO DE SOUSA*
 📍 Varjota • Amontada - CE
 Protocolo: #${d.id}
 ━━━━━━━━━━━━━━━━━━━━━━━
 
-Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo site.
+Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula 2027 em PDF* pelo site.
 
-🎒 *Turma:* ${d.serie}
+🎒 *Turma 2027:* ${d.serie}
 ⏰ *Turno:* ${d.turno}
 👶 *Aluno(a):* ${d.nomeAluno} (${d.idade})
 👨‍👩‍👧 *Responsável:* ${d.nomeResponsavel} (${d.parentesco})
 📞 *WhatsApp:* ${d.telefoneResp}
 🏠 *Endereço:* ${d.comunidadeBairro}, ${d.ruaNumero} - Amontada/CE
 
-📎 *Estou anexando aqui no WhatsApp o PDF oficial:*
+📎 *Estou anexando aqui no WhatsApp o PDF oficial 2027:*
 📄 _${nomePdf}_
 
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -406,7 +405,7 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
   function renderizarComprovanteModal(d) {
     receiptSummary.innerHTML = `
       <div class="receipt-item">
-        <span class="receipt-label">Protocolo:</span>
+        <span class="receipt-label">Protocolo 2027:</span>
         <span class="receipt-val">#${d.id}</span>
       </div>
       <div class="receipt-item">
@@ -448,7 +447,7 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
         document.execCommand('copy');
         document.body.removeChild(tempText);
       }
-      showToast('📋 Resumo copiado com sucesso! Cole no WhatsApp.');
+      showToast('📋 Resumo 2027 copiado! Cole no WhatsApp.');
     } catch (err) {
       showToast('Erro ao copiar dados automaticamente.');
     }
@@ -459,7 +458,7 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
     localStorage.removeItem(DRAFT_KEY);
     successModal.classList.add('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast('Formulário pronto para nova pré-matrícula.');
+    showToast('Formulário pronto para nova pré-matrícula 2027.');
   });
 
   // =========================================================================
@@ -488,7 +487,7 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
       historicoList.innerHTML = `
         <div style="text-align: center; padding: 24px 10px; color: #94a3b8;">
           <i class="fa-regular fa-folder" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
-          Nenhum cadastro realizado neste aparelho ainda.
+          Nenhum cadastro de 2027 realizado neste aparelho ainda.
         </div>
       `;
       return;
@@ -544,13 +543,13 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
     }
 
     const headers = [
-      'Protocolo',
+      'Protocolo 2027',
       'Data Envio',
       'Turma/Série',
       'Turno',
       'Nome do Aluno',
       'Data Nasc.',
-      'Idade Aprox.',
+      'Idade (2027)',
       'Sexo',
       'CPF Aluno',
       'RG/Certidão Aluno',
@@ -602,15 +601,15 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Pre_Matriculas_CEI_Rita_Pinto_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `Pre_Matriculas_2027_CEI_Rita_Pinto_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    showToast('Planilha Excel/CSV gerada com sucesso!');
+    showToast('Planilha Excel 2027 gerada com sucesso!');
   });
 
   // =========================================================================
-  // UTILITÁRIOS (DATA, IDADE ROBUSTA, TOAST)
+  // UTILITÁRIOS (DATA, IDADE CALCULADA PARA 2027, TOAST)
   // =========================================================================
 
   function formatarDataBrasileira(dataIso) {
@@ -622,32 +621,30 @@ Olá! Acabei de gerar o *Comprovante Oficial de Pré-Matrícula em PDF* pelo sit
     return dataIso;
   }
 
+  // Idade calculada com base no Ano Letivo 2027 (corte de 31 de Março de 2027 para Educação Infantil)
   function calcularIdade(dataIso) {
     if (!dataIso) return 'A conferir';
     const partes = dataIso.split('-');
     if (partes.length === 3) {
       const ano = parseInt(partes[0], 10);
-      const mes = parseInt(partes[1], 10) - 1;
+      const mes = parseInt(partes[1], 10); // 1-12
       const dia = parseInt(partes[2], 10);
 
-      if (isNaN(ano) || isNaN(mes) || isNaN(dia) || ano < 1990 || ano > 2030) {
+      if (isNaN(ano) || isNaN(mes) || isNaN(dia) || ano < 2010 || ano > 2027) {
         return 'A conferir';
       }
 
-      const hoje = new Date();
-      const nasc = new Date(ano, mes, dia);
-
-      let anos = hoje.getFullYear() - nasc.getFullYear();
-      const m = hoje.getMonth() - nasc.getMonth();
-      if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
-        anos--;
+      // Cálculo da idade em 31/03/2027 (data de corte oficial da Educação Infantil no Brasil)
+      let idadeEm2027 = 2027 - ano;
+      if (mes > 3 || (mes === 3 && dia > 31)) {
+        idadeEm2027--;
       }
 
-      if (anos < 0 || anos > 20 || isNaN(anos)) {
+      if (idadeEm2027 < 0 || idadeEm2027 > 10) {
         return 'A conferir';
       }
 
-      return anos === 1 ? '1 ano' : `${anos} anos`;
+      return idadeEm2027 === 1 ? '1 ano' : `${idadeEm2027} anos`;
     }
     return 'A conferir';
   }
